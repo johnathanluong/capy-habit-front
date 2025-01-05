@@ -1,11 +1,12 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
-// const LOGIN_URL = 'http://127.0.0.1:8000/api/token/pair';
 const LOGIN_URL = '/api/login/';
 
 export default function Page() {
 	const [darkMode, setDarkMode] = useState(false);
+	const router = useRouter();
 
 	useEffect(() => {
 		if (darkMode) {
@@ -15,28 +16,27 @@ export default function Page() {
 		}
 	}, [darkMode]);
 
-	async function handleSubmit(e: any) {
+	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-
-		const formData = new FormData(e.target);
+		const formData = new FormData(e.currentTarget);
 		const objData = Object.fromEntries(formData);
-		const data = JSON.stringify(objData);
+		const body = JSON.stringify(objData);
+		console.log(body);
 		const requestOptions = {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: data
+			body: body
 		};
 
 		const res = await fetch(LOGIN_URL, requestOptions);
 		if (!res.ok) {
-			console.error('Error logging in:', res.statusText, res.status);
+			console.error('Error logging in:', res);
 			return;
 		}
 
-		const resData = await res.json();
-		console.log(resData);
+		router.replace('/logout/');
 	}
 
 	return (

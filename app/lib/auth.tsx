@@ -1,11 +1,18 @@
+'use server';
 import { cookies } from 'next/headers';
 
 const MAX_TOKEN_AGE = 600;
 
-export async function getToken() {
+export async function getAuthToken() {
 	const authCookies = await cookies();
 	const authToken = authCookies.get('auth-token');
 	return authToken?.value;
+}
+
+export async function getRefreshToken() {
+	const authCookies = await cookies();
+	const refreshToken = authCookies.get('refresh-token');
+	return refreshToken?.value;
 }
 
 // Called on login

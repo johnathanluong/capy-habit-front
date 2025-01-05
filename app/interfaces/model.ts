@@ -1,5 +1,5 @@
 export interface Habit {
-	user: any;
+	user: unknown;
 	name: string;
 	description: string;
 	category?: string;

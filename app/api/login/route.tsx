@@ -10,7 +10,7 @@ interface POSTResponse {
 	refresh: string;
 }
 
-export async function LoginPOST(request: Request) {
+export async function POST(request: Request) {
 	const requestData = await request.json();
 	const body = JSON.stringify(requestData);
 	const requestOptions = {
@@ -31,9 +31,8 @@ export async function LoginPOST(request: Request) {
 
 	const { username, access, refresh } = data;
 
-	const authToken = access;
-	setAuthToken(authToken);
-	setRefreshToken(refresh);
+	await setAuthToken(access);
+	await setRefreshToken(refresh);
 
 	return NextResponse.json({ loggedIn: true, username: username }, { status: 200 });
 }
