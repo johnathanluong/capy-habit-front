@@ -1,5 +1,4 @@
 export interface Habit {
-	user: unknown;
 	name: string;
 	description: string;
 	category?: string;
@@ -9,4 +8,9 @@ export interface Habit {
 	frequency_type: string;
 	grace_period: number;
 	streak: number;
+}
+
+export interface SWRError extends Error {
+	status: number;
+	info: string;
 }

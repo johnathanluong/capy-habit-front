@@ -1,12 +1,12 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/AuthProvider';
 import { useState, useEffect } from 'react';
 
 const LOGIN_URL = '/api/login/';
 
 export default function Page() {
-	const [darkMode, setDarkMode] = useState(false);
-	const router = useRouter();
+	const [darkMode, setDarkMode] = useState(true);
+	const auth = useAuth();
 
 	useEffect(() => {
 		if (darkMode) {
@@ -21,7 +21,6 @@ export default function Page() {
 		const formData = new FormData(e.currentTarget);
 		const objData = Object.fromEntries(formData);
 		const body = JSON.stringify(objData);
-		console.log(body);
 		const requestOptions = {
 			method: 'POST',
 			headers: {
@@ -36,7 +35,7 @@ export default function Page() {
 			return;
 		}
 
-		router.replace('/logout/');
+		auth?.login();
 	}
 
 	return (

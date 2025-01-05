@@ -1,12 +1,13 @@
 'use client';
 import Image from 'next/image';
 import useSWR from 'swr';
-import { Habit } from './interfaces/model';
+import { useAuth } from '@/components/AuthProvider';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Home() {
-	const { data, error, isLoading } = useSWR('http://127.0.0.1:8000/api/habits/', fetcher);
+	const auth = useAuth();
+	const { data, error, isLoading } = useSWR('/api/habits/', fetcher);
 
 	if (isLoading) return <div>Loading...</div>;
 	if (error) return <div>Error loading data</div>;
@@ -24,12 +25,8 @@ export default function Home() {
 						.
 					</li>
 					<li>Save and see your changes instantly.</li>
-					{data &&
-						data.map((habit: Habit, index: number) => (
-							<li key={index}>
-								{habit.name} - {habit.description}
-							</li>
-						))}
+					{auth?.isAuthenticated ? 'Hey' : 'Unauthenticated'}
+					{JSON.stringify(data)}
 				</ol>
 
 				<div className='flex gap-4 items-center flex-col sm:flex-row'>

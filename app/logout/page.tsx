@@ -1,11 +1,16 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { getAuthToken, getRefreshToken } from '../lib/auth';
+import { useAuth } from '@/components/AuthProvider';
 
 const LOGOUT_URL = '/api/logout/';
 
 export default function Page() {
-	const [darkMode, setDarkMode] = useState(false);
+	const [darkMode, setDarkMode] = useState(true);
+	const auth = useAuth();
+
+	useEffect(() => {
+		console.log(auth?.isAuthenticated);
+	});
 
 	useEffect(() => {
 		if (darkMode) {
@@ -29,14 +34,6 @@ export default function Page() {
 		if (!res.ok) {
 			console.error('Error logging out:', res);
 		}
-	}
-
-	async function tokens() {
-		const authToken = await getAuthToken();
-		const refreshToken = await getRefreshToken();
-
-		console.log(authToken);
-		console.log(refreshToken);
 	}
 
 	return (
@@ -63,7 +60,6 @@ export default function Page() {
 				>
 					Logout
 				</button>
-				<button onClick={tokens}>get tokens</button>
 			</div>
 		</div>
 	);
