@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { useAuth } from '@/components/AuthProvider';
 import { SWRError } from '../interfaces/model';
+import Notepad from '@/components/Notepad';
 
 const fetcher = async (url: string) => {
 	const res = await fetch(url);
@@ -51,6 +52,7 @@ export default function Page() {
 					</button>
 				</div>
 			</div>
+			<Notepad />
 		</div>
 	);
 }

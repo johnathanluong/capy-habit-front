@@ -34,6 +34,8 @@ export default function Page() {
 		if (!res.ok) {
 			console.error('Error logging out:', res);
 		}
+
+		auth?.logout();
 	}
 
 	return (

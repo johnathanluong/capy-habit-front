@@ -1,6 +1,6 @@
 'use client';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { createContext, useContext, ReactNode, useMemo, useState, useEffect } from 'react';
+import { createContext, useContext, ReactNode, useMemo, useState, useEffect, Suspense } from 'react';
 
 interface AuthContextType {
 	isAuthenticated: boolean;
@@ -14,25 +14,28 @@ const LOGOUT_REDIRECT = '/login';
 const LOGIN_REQUIRED = '/login';
 const AUTH_LOCAL_STORAGE_KEY = 'is-authenticated';
 const REFRESH_URL = '/api/refresh/';
-const REFRESH_INTERVAL = 540000; // 9 mins
+const REFRESH_INTERVAL = 50000; // 9 mins
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+function AuthProviderWrapper({ children }: { children: ReactNode }) {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const router = useRouter();
 	const path = usePathname();
-
 	const searchParams = useSearchParams();
 
 	const login = () => {
 		setIsAuthenticated(true);
 		localStorage.setItem(AUTH_LOCAL_STORAGE_KEY, '1');
-		const nextURL = searchParams.get('next');
-		const invalidURLS = ['/login', '/logout'];
-		const isNextURLValid = nextURL && nextURL.startsWith('/') && !invalidURLS.includes(nextURL);
 
-		router.replace(isNextURLValid ? nextURL : LOGIN_REDIRECT);
+		// Get the next URL and validate it
+		const nextURL = searchParams.get('next');
+		const invalidURLs = ['/login', '/logout'];
+		const isNextURLValid = nextURL && nextURL.startsWith('/') && !invalidURLs.includes(nextURL);
+
+		// Use validated next URL or default redirect
+		const redirectURL = isNextURLValid ? nextURL : LOGIN_REDIRECT;
+		router.replace(redirectURL);
 	};
 
 	const logout = () => {
@@ -44,13 +47,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	const loginRequiredRedirect = () => {
 		setIsAuthenticated(false);
 		localStorage.setItem(AUTH_LOCAL_STORAGE_KEY, '0');
-		let loginWithNextURL = LOGIN_REQUIRED;
 
-		if (LOGIN_REQUIRED !== path) {
-			loginWithNextURL = `${LOGIN_REQUIRED}?next=${path}`;
-		}
-
-		router.replace(loginWithNextURL);
+		const redirectPath = `${LOGIN_REQUIRED}?next=${encodeURIComponent(path)}`;
+		router.replace(redirectPath);
 	};
 
 	useEffect(() => {
@@ -66,15 +65,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 					const options = {
 						method: 'POST',
 						headers: {
-							'Application-Content': 'application/json'
-						},
-						body: ''
+							'Content-Type': 'application/json'
+						}
 					};
 
-					await fetch(REFRESH_URL, options);
+					const response = await fetch(REFRESH_URL, options);
+					if (!response.ok) {
+						throw new Error('Refresh failed.');
+					}
 				} catch (e) {
 					console.error('Failed to refresh authToken', e);
-					logout();
+					loginRequiredRedirect();
 				}
 			}, REFRESH_INTERVAL);
 		}
@@ -84,10 +85,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 				clearInterval(refreshInterval);
 			}
 		};
-	}, []);
+	}, [logout]);
 
 	const value = useMemo(() => ({ isAuthenticated, login, logout, loginRequiredRedirect }), [isAuthenticated]);
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+	return (
+		<Suspense fallback={<div>Loading...</div>}>
+			<AuthProviderWrapper>{children}</AuthProviderWrapper>
+		</Suspense>
+	);
 }
 
 export function useAuth() {
