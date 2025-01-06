@@ -1,5 +1,6 @@
 'use client';
 import { useAuth } from '@/components/AuthProvider';
+import FeatureCard from '@/components/FeatureCard';
 import RegisterForm from '@/components/RegisterForm';
 
 export default function Home() {
@@ -18,6 +19,8 @@ export default function Home() {
 					</button>
 
 					<RegisterForm />
+
+					<FeatureCard title={'hey'} description={'oh'} />
 				</div>
 			</main>
 		</div>
