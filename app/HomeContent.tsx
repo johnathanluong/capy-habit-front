@@ -11,20 +11,21 @@ import PathSVG from '@/components/LandingPageCapybaras/PathSVG';
 import Capybara1SVG from '@/components/LandingPageCapybaras/Capybara1SVG';
 import Capybara2SVG from '@/components/LandingPageCapybaras/Capybara2SVG';
 import Capybara3SVG from '../components/LandingPageCapybaras/Capybara3SVG';
+import Image from 'next/image';
 
 export default function Home() {
 	const auth = useAuth();
 
 	return (
-		<div className='min-h-screen bg-[#E6EEF6]'>
+		<div className='min-h-screen bg-[#E6EEF6] overflow-hidden'>
 			{/* Navigation */}
 			<NavBar />
 
 			{/* Hero Section */}
-			<section className='relative px-8 py-28'>
-				<div className='max-w-7xl mx-auto grid grid-cols-2 gap-12'>
-					<div className='pt-0'>
-						<h1 className='text-5xl font-bold text-gray-800 mb-6 relative z-20'>
+			<section className='relative px-8 pt-12 pb-0 md:py-28'>
+				<div className='max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2'>
+					<div className='relative'>
+						<h1 className='text-4xl md:text-5xl font-bold text-gray-800 mb-6 relative z-20'>
 							Build Your Habits,
 							<br />
 							Grow Your Stack.
@@ -35,15 +36,18 @@ export default function Home() {
 							closer to unlocking unique accessories and customizations for your capybara. Start tracking
 							today and watch your stack grow as you grow!
 						</p>
-						<div className='z-10 absolute -translate-y-24 scale-[0.9]'>
+						<div className='z-10 absolute -translate-y-24 scale-[0.9] hidden md:block'>
 							<Capybara1SVG />
 						</div>
-						<div className='absolute z-[1] scale-x-[2] scale-y-[0.6] translate-y-[-14rem]'>
+						<div className='absolute z-[1] scale-x-[2] scale-y-[0.6] translate-y-[-14rem] hidden md:block'>
 							<PathSVG />
 						</div>
 					</div>
-					<div className='flex justify-end z-10'>
+					<div className='flex justify-center z-10 md:justify-end'>
 						<RegisterForm />
+					</div>
+					<div className='md:hidden scale-75 flex justify-center'>
+						<Image src={'/images/MobileCapyStack.webp'} alt='3 capybaras' width={400} height={400} />
 					</div>
 				</div>
 			</section>
@@ -65,13 +69,13 @@ export default function Home() {
 						/>
 					</div>
 				</div>
-				<div className='relative  translate-y-[-6.5rem] translate-x-[-6rem] scale-[0.55] z-20'>
+				<div className='relative translate-y-[-6.5rem] translate-x-[-6rem] scale-[0.55] z-20 hidden md:block'>
 					<Capybara2SVG />
 				</div>
 			</section>
 
 			<section className='px-8 py-[12rem] max-h-60 min-h-60 flex'>
-				<div className='relative translate-x-[4rem] translate-y-[-14rem] scale-75 z-20'>
+				<div className='relative translate-x-[4rem] translate-y-[-14rem] scale-75 z-20 hidden md:block'>
 					<Capybara3SVG />
 				</div>
 				<div className='relative z-20 max-w-6xl text-center my-[-7rem]'>
