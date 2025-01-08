@@ -59,7 +59,7 @@ export default function RegisterForm() {
 				/>
 				<button
 					type='submit'
-					className='bg-gray-800 text-white px-4 rounded-md hover:bg-[#B1C29E] hover:text-[#333333] transition-colors mt-0 w-32 ml-auto mr-6'
+					className='bg-gray-600 text-white px-4 rounded-md hover:bg-gray-700 transition-colors mt-0 w-32 ml-auto mr-6'
 				>
 					Register
 				</button>

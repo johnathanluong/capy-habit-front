@@ -23,8 +23,9 @@ export default {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))',
 					white: '#FFFFFF',
-					light: '#E6EEF6', // Light background
-					dark: '#B1C29E' // Button background
+					light: '#E6EEF6',
+					green: '#B1C29E',
+					darkgreen: '#9cad87'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
