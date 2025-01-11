@@ -17,7 +17,7 @@ export default function Page() {
 	const auth = useAuth();
 
 	return (
-		<div className='min-h-screen bg-[#E6EEF6] overflow-hidden'>
+		<div className={`min-h-screen bg-[#E6EEF6] overflow-hidden}`}>
 			{/* Navigation */}
 			<NavBar />
 

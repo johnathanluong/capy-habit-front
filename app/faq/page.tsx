@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import NavBar from '@/components/NavBar';
 
 export const metadata: Metadata = {
 	title: 'FAQ | Capy Habits',
@@ -52,36 +53,41 @@ const faqs = [
 
 export default function FAQPage() {
 	return (
-		<div className='min-h-screen bg-primary-white'>
-			<div className='container mx-auto py-8 px-4 md:px-0'>
-				<Card className='bg-background shadow-lg'>
-					<CardHeader className='bg-primary-dark rounded-t-lg'>
-						<CardTitle className='text-3xl font-bold text-center mb-2 text-text-primary'>
-							Frequently Asked Questions
-						</CardTitle>
-						<CardDescription className='text-center text-lg mb-6 text-text-secondary'>
-							Everything you need to know about Capy Habits, your gamified habit tracker
-						</CardDescription>
-					</CardHeader>
+		<>
+			<NavBar />
+			<div className='min-h-screen bg-primary-white'>
+				<div className='container mx-auto py-8 px-4 md:px-0'>
+					<Card className='bg-background shadow-lg bg-primary-darkgreen'>
+						<CardHeader className='bg-primary-dark rounded-t-lg'>
+							<CardTitle className='text-3xl font-bold text-center mb-2 text-text-primary'>
+								Frequently Asked Questions
+							</CardTitle>
+							<CardDescription className='text-center text-lg mb-6 text-text-secondary'>
+								Everything you need to know about Capy Habits, your gamified habit tracker
+							</CardDescription>
+						</CardHeader>
 
-					<CardContent className='bg-primary-light'>
-						<Accordion type='single' collapsible className='w-full'>
-							{faqs.map((faq, index) => (
-								<AccordionItem
-									value={`item-${index}`}
-									key={index}
-									className='border-b border-secondary-light'
-								>
-									<AccordionTrigger className='text-text-primary hover:text-secondary-accent'>
-										{faq.question}
-									</AccordionTrigger>
-									<AccordionContent className='text-text-secondary'>{faq.answer}</AccordionContent>
-								</AccordionItem>
-							))}
-						</Accordion>
-					</CardContent>
-				</Card>
+						<CardContent className='bg-primary-green'>
+							<Accordion type='single' collapsible className='w-full'>
+								{faqs.map((faq, index) => (
+									<AccordionItem
+										value={`item-${index}`}
+										key={index}
+										className='border-b border-secondary-light'
+									>
+										<AccordionTrigger className='text-text-primary hover:text-secondary-accent'>
+											{faq.question}
+										</AccordionTrigger>
+										<AccordionContent className='text-text-secondary'>
+											{faq.answer}
+										</AccordionContent>
+									</AccordionItem>
+								))}
+							</Accordion>
+						</CardContent>
+					</Card>
+				</div>
 			</div>
-		</div>
+		</>
 	);
 }

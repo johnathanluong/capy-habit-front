@@ -29,6 +29,7 @@ export default function Page() {
 			auth?.loginRequiredRedirect();
 		}
 	}, [auth, error]);
+	
 	useEffect(() => {
 		if (darkMode) {
 			document.documentElement.classList.add('dark');

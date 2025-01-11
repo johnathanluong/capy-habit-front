@@ -9,7 +9,9 @@ export default function Footer() {
 				<div className='text-center mb-8'>
 					<h3 className='text-xl font-medium text-gray-800 mb-2'>Help Support John!</h3>
 					<p className='text-gray-600'>Please support John&apos;s living by offering him a job!</p>
-					<a href='https://www.vecteezy.com/free-vector/capybara'>Capybara Vectors by Vecteezy</a>
+					<a className='text-gray-500' href='https://www.vecteezy.com/free-vector/capybara'>
+						Capybara Vectors by Vecteezy
+					</a>
 				</div>
 				<div className='flex items-center justify-end space-x-6'>
 					<a

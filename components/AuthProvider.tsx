@@ -7,10 +7,11 @@ interface AuthContextType {
 	login: () => void;
 	logout: () => void;
 	loginRequiredRedirect: () => void;
+	path: string;
 }
 
-const LOGIN_REDIRECT = '/';
-const LOGOUT_REDIRECT = '/login';
+const LOGIN_REDIRECT = '/dashboard';
+const LOGOUT_REDIRECT = '/';
 const LOGIN_REQUIRED = '/login';
 const AUTH_LOCAL_STORAGE_KEY = 'is-authenticated';
 const REFRESH_URL = '/api/refresh/';
@@ -52,32 +53,63 @@ function AuthProviderWrapper({ children }: { children: ReactNode }) {
 		router.replace(redirectPath);
 	};
 
+	// Mounts the auth status
 	useEffect(() => {
 		const storedAuthStatus = localStorage.getItem(AUTH_LOCAL_STORAGE_KEY);
 		const authStatus = parseInt(storedAuthStatus ?? '0');
 		setIsAuthenticated(authStatus === 1);
+	}, []);
 
+	// Handles refreshing the auth token using refresh token
+	useEffect(() => {
+		let isRefreshing = false;
 		let refreshInterval: NodeJS.Timeout | undefined;
 
-		if (authStatus === 1) {
-			refreshInterval = setInterval(async () => {
-				try {
-					const options = {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json'
-						}
-					};
+		const RefreshToken = async () => {
+			if (isRefreshing) {
+				return;
+			}
+			isRefreshing = true;
+			let retryCount = 0;
 
-					const response = await fetch(REFRESH_URL, options);
-					if (!response.ok) {
-						throw new Error('Refresh failed.');
+			try {
+				while (retryCount < 3) {
+					try {
+						const options = {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							}
+						};
+						const response = await fetch(REFRESH_URL, options);
+
+						if (!response.ok) {
+							throw response.status;
+						}
+
+						return;
+					} catch (e) {
+						if (e === 500 && retryCount < 2) {
+							console.log(`500 error, retry attempt ${retryCount + 1} of 3...`);
+							retryCount++;
+							await new Promise((resolve) => setTimeout(resolve, 1000 * retryCount));
+						} else if (e === 401) {
+							console.error('Authentication failed', e);
+							loginRequiredRedirect();
+							return;
+						} else {
+							console.error('Unhandled error during refresh', e);
+							return;
+						}
 					}
-				} catch (e) {
-					console.error('Failed to refresh authToken', e);
-					loginRequiredRedirect();
 				}
-			}, REFRESH_INTERVAL);
+			} finally {
+				isRefreshing = false;
+			}
+		};
+
+		if (isAuthenticated) {
+			refreshInterval = setInterval(RefreshToken, REFRESH_INTERVAL);
 		}
 
 		return () => {
@@ -85,9 +117,12 @@ function AuthProviderWrapper({ children }: { children: ReactNode }) {
 				clearInterval(refreshInterval);
 			}
 		};
-	}, [logout]);
+	}, [isAuthenticated, loginRequiredRedirect, path]);
 
-	const value = useMemo(() => ({ isAuthenticated, login, logout, loginRequiredRedirect }), [isAuthenticated]);
+	const value = useMemo(
+		() => ({ isAuthenticated, login, logout, loginRequiredRedirect, path }),
+		[isAuthenticated, path]
+	);
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
