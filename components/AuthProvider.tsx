@@ -1,6 +1,6 @@
 'use client';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { createContext, useContext, ReactNode, useMemo, useState, useEffect, Suspense } from 'react';
+import { createContext, useContext, ReactNode, useMemo, useState, useEffect, Suspense, useCallback } from 'react';
 
 interface AuthContextType {
 	isAuthenticated: boolean;
@@ -25,33 +25,33 @@ function AuthProviderWrapper({ children }: { children: ReactNode }) {
 	const path = usePathname();
 	const searchParams = useSearchParams();
 
-	const login = () => {
+	const login = useCallback(() => {
 		setIsAuthenticated(true);
 		localStorage.setItem(AUTH_LOCAL_STORAGE_KEY, '1');
 
-		// Get the next URL and validate it
+		// Get next url and cache it
 		const nextURL = searchParams.get('next');
 		const invalidURLs = ['/login', '/logout'];
 		const isNextURLValid = nextURL && nextURL.startsWith('/') && !invalidURLs.includes(nextURL);
 
-		// Use validated next URL or default redirect
+		// Redirects user to the url
 		const redirectURL = isNextURLValid ? nextURL : LOGIN_REDIRECT;
 		router.replace(redirectURL);
-	};
+	}, [router, searchParams]);
 
-	const logout = () => {
+	const logout = useCallback(() => {
 		setIsAuthenticated(false);
 		localStorage.setItem(AUTH_LOCAL_STORAGE_KEY, '0');
 		router.replace(LOGOUT_REDIRECT);
-	};
+	}, [router]);
 
-	const loginRequiredRedirect = () => {
+	const loginRequiredRedirect = useCallback(() => {
 		setIsAuthenticated(false);
 		localStorage.setItem(AUTH_LOCAL_STORAGE_KEY, '0');
 
 		const redirectPath = `${LOGIN_REQUIRED}?next=${encodeURIComponent(path)}`;
 		router.replace(redirectPath);
-	};
+	}, [router, path]);
 
 	// Mounts the auth status
 	useEffect(() => {
@@ -121,7 +121,7 @@ function AuthProviderWrapper({ children }: { children: ReactNode }) {
 
 	const value = useMemo(
 		() => ({ isAuthenticated, login, logout, loginRequiredRedirect, path }),
-		[isAuthenticated, path]
+		[isAuthenticated, path, login, logout, loginRequiredRedirect]
 	);
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

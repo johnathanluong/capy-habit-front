@@ -10,9 +10,9 @@ export default function NavBar() {
 
 	const isAuthenticated = auth?.isAuthenticated;
 	const path = auth?.path;
-	const invalidPaths = ['/login', '/dashboard'];
 
 	useEffect(() => {
+		const invalidPaths = ['/login', '/dashboard'];
 		if (!path) {
 			return;
 		}

@@ -99,7 +99,7 @@ export default function SettingsForm() {
 								/>
 							</FormControl>
 							<FormDescription className='text-text-secondary'>
-								We'll use this email for important notifications.
+								We will use this email for important notifications.
 							</FormDescription>
 							<FormMessage />
 						</FormItem>
