@@ -1,4 +1,5 @@
 'use server';
+import { apiFetch } from '@/lib/apiFetch';
 import { setAuthToken, setRefreshToken } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 
@@ -11,28 +12,26 @@ interface POSTResponse {
 }
 
 export async function POST(request: Request) {
-	const requestData = await request.json();
-	const body = JSON.stringify(requestData);
-	const requestOptions = {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: body
-	};
+	try {
+		const requestData = await request.json();
+		const body = JSON.stringify(requestData);
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: body
+		};
 
-	const res = await fetch(BACKEND_LOGIN_URL, requestOptions);
-	const data: POSTResponse = await res.json();
+		const data: POSTResponse = await apiFetch(BACKEND_LOGIN_URL, options);
 
-	if (!res.ok) {
-		console.error('Error logging in:', res.statusText, res.status);
-		return NextResponse.json({ loggedIn: false, ...data }, { status: 400 });
+		const { username, access, refresh } = data;
+
+		await setAuthToken(access);
+		await setRefreshToken(refresh);
+
+		return NextResponse.json({ loggedIn: true, username: username }, { status: 200 });
+	} catch (e) {
+		return NextResponse.json({ loggedIn: false, username: (e as Error).message }, { status: 400 });
 	}
-
-	const { username, access, refresh } = data;
-
-	await setAuthToken(access);
-	await setRefreshToken(refresh);
-
-	return NextResponse.json({ loggedIn: true, username: username }, { status: 200 });
 }

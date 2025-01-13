@@ -1,7 +1,8 @@
 'use server';
 import { cookies } from 'next/headers';
 
-const MAX_TOKEN_AGE = 600;
+const MAX_AUTH_TOKEN_AGE = 10 * 60; // 10 min
+const MAX_REFRESH_TOKEN_AGE = 14 * 24 * 60 * 60; // 14 days
 
 export async function getAuthToken() {
 	const authCookies = await cookies();
@@ -24,7 +25,7 @@ export async function setAuthToken(authToken: string) {
 		httpOnly: true,
 		sameSite: 'strict',
 		secure: process.env.NODE_ENV !== 'development',
-		maxAge: MAX_TOKEN_AGE
+		maxAge: MAX_AUTH_TOKEN_AGE
 	});
 }
 
@@ -37,7 +38,7 @@ export async function setRefreshToken(refreshToken: string) {
 		httpOnly: true,
 		sameSite: 'strict',
 		secure: process.env.NODE_ENV !== 'development',
-		maxAge: MAX_TOKEN_AGE
+		maxAge: MAX_REFRESH_TOKEN_AGE
 	});
 }
 
