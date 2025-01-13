@@ -20,7 +20,7 @@ export default function Dashboard() {
 	return (
 		<>
 			<NavBar />
-			<div className='flex h-screen bg-primary-white'>
+			<div className='flex h-screen bg-primary-light'>
 				<main className='flex-1 p-6 overflow-auto'>
 					<div className='max-w-4xl mx-auto space-y-6'>
 						<div className='flex justify-between items-center'>

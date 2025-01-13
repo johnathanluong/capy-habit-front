@@ -28,7 +28,7 @@ export function HabitList() {
 	};
 
 	return (
-		<Card className='bg-primary-light'>
+		<Card className='bg-primary-dark'>
 			<CardHeader>
 				<CardTitle className='text-text-primary'>Habits to Complete</CardTitle>
 			</CardHeader>

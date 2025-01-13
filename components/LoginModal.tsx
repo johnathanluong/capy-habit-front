@@ -38,10 +38,7 @@ export function LoginDialog() {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button
-					variant='outline'
-					className='px-4 py-1 bg-primary-green text-gray-800 rounded-md hover:bg-[#9FB08E] transition-colors'
-				>
+				<Button className='px-4 py-1 bg-primary-green text-gray-800 rounded-md hover:bg-[#9FB08E] transition-colors'>
 					Login
 				</Button>
 			</DialogTrigger>
@@ -53,12 +50,12 @@ export function LoginDialog() {
 				</DialogHeader>
 				<form onSubmit={handleSubmit} className='space-y-4'>
 					<div className='space-y-2'>
-						<Label htmlFor='username'>Username</Label>
+						<Label htmlFor='identifier'>Username or Email</Label>
 						<Input
 							required
-							id='username'
-							name='username'
-							placeholder='Username'
+							id='identifier'
+							name='identifier'
+							placeholder='Username or Email'
 							className='border-primary-darkgreen focus:border-primary-darkgreen bg-primary-darkgreen'
 						/>
 					</div>

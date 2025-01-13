@@ -3,7 +3,7 @@ import { apiFetch } from '@/lib/apiFetch';
 import { setAuthToken, setRefreshToken } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 
-const BACKEND_LOGIN_URL = 'http://127.0.0.1:8000/api/token/pair';
+const BACKEND_LOGIN_URL = 'http://127.0.0.1:8000/api/users/login';
 
 interface POSTResponse {
 	username: string;
@@ -15,6 +15,7 @@ export async function POST(request: Request) {
 	try {
 		const requestData = await request.json();
 		const body = JSON.stringify(requestData);
+		console.log(body);
 		const options = {
 			method: 'POST',
 			headers: {
@@ -32,6 +33,6 @@ export async function POST(request: Request) {
 
 		return NextResponse.json({ loggedIn: true, username: username }, { status: 200 });
 	} catch (e) {
-		return NextResponse.json({ loggedIn: false, username: (e as Error).message }, { status: 400 });
+		return NextResponse.json({ loggedIn: false, error: (e as Error).message }, { status: 400 });
 	}
 }

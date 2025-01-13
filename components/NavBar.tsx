@@ -25,16 +25,16 @@ export default function NavBar() {
 	}, [path]);
 
 	return (
-		<nav className='flex items-center justify-between px-8 py-4 z-50'>
+		<nav className='fixed top-0 left-0 right-0 flex items-center justify-between px-8 py-4 z-50 bg-slate-400'>
 			<div className='flex items-center gap-8'>
-				<Link href='/' className='text-2xl font-bold text-gray-800'>
+				<Link href='/' className='text-2xl font-bold text-text-primary'>
 					Capy Habits
 				</Link>
 				<div className='flex gap-6'>
-					<Link href='/' className='text-gray-600 hover:text-gray-800'>
+					<Link href='/' className='text-text-secondary hover:text-gray-900'>
 						Home
 					</Link>
-					<Link href='/faq' className='text-gray-600 hover:text-gray-800'>
+					<Link href='/faq' className='text-text-secondary hover:text-gray-900'>
 						FAQ
 					</Link>
 				</div>

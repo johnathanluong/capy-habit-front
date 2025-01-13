@@ -11,7 +11,7 @@ export function NavigationArrows() {
 					asChild
 					variant='outline'
 					size='icon'
-					className='h-12 w-12 rounded-full bg-primary-light hover:bg-primary-green text-text-primary'
+					className='h-12 w-12 rounded-full bg-primary-green hover:bg-primary-darkgreen text-text-primary'
 				>
 					<Link href='/gacha'>
 						<ChevronLeft className='h-4 w-4' />
@@ -25,7 +25,7 @@ export function NavigationArrows() {
 					asChild
 					variant='outline'
 					size='icon'
-					className='h-12 w-12 rounded-full bg-primary-light hover:bg-primary-green text-text-primary'
+					className='h-12 w-12 rounded-full bg-primary-green hover:bg-primary-darkgreen text-text-primary'
 				>
 					<Link href='/create-habit'>
 						<ChevronRight className='h-4 w-4' />
