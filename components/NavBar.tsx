@@ -3,16 +3,19 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from './AuthProvider';
 import { LoginDialog } from './LoginModal';
+import { Button } from './ui/button';
 
 export default function NavBar() {
 	const auth = useAuth();
 	const [isPathValid, setIsPathValid] = useState(true);
+	const [isDashboardPathValid, setIsDashboardPathValid] = useState(true);
 
 	const isAuthenticated = auth?.isAuthenticated;
 	const path = auth?.path;
 
 	useEffect(() => {
-		const invalidPaths = ['/login', '/dashboard'];
+		const invalidPaths = ['/login', '/dashboard', '/create-habit'];
+		const invalidDashboardPaths = ['/login'];
 		if (!path) {
 			return;
 		}
@@ -22,12 +25,18 @@ export default function NavBar() {
 		} else {
 			setIsPathValid(true);
 		}
+
+		if (invalidDashboardPaths.includes(path)) {
+			setIsDashboardPathValid(false);
+		} else {
+			setIsDashboardPathValid(true);
+		}
 	}, [path]);
 
 	return (
-		<nav className='fixed top-0 left-0 right-0 flex items-center justify-between px-8 py-4 z-50 bg-slate-400'>
+		<nav className='fixed top-0 left-0 right-0 flex items-center justify-between px-6 py-4 z-50 bg-slate-400'>
 			<div className='flex items-center gap-8'>
-				<Link href='/' className='text-2xl font-bold text-text-primary'>
+				<Link href='/' className='text-3xl font-bold text-text-primary'>
 					Capy Habits
 				</Link>
 				<div className='flex gap-6'>
@@ -40,6 +49,14 @@ export default function NavBar() {
 				</div>
 			</div>
 			{!isAuthenticated && isPathValid && <LoginDialog />}
+			{isAuthenticated && isDashboardPathValid && (
+				<Button
+					asChild
+					className='bg-primary-green px-4 py-1 text-gray-800 rounded-md hover:bg-[#9FB08E] transition-colors'
+				>
+					<Link href={'/dashboard'}>Dashboard</Link>
+				</Button>
+			)}
 		</nav>
 	);
 }

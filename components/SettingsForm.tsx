@@ -20,9 +20,7 @@ const settingsFormSchema = z.object({
 	timezone: z.string({
 		required_error: 'Please select a timezone.'
 	}),
-	bio: z.string().max(160).optional(),
-	enableNotifications: z.boolean().default(true),
-	enableSoundEffects: z.boolean().default(true)
+	bio: z.string().max(160).optional()
 });
 
 type SettingsFormValues = z.infer<typeof settingsFormSchema>;
@@ -31,9 +29,7 @@ const defaultValues: Partial<SettingsFormValues> = {
 	display_name: '',
 	email: '',
 	timezone: '',
-	bio: '',
-	enableNotifications: true,
-	enableSoundEffects: true
+	bio: ''
 };
 
 export default function SettingsForm() {

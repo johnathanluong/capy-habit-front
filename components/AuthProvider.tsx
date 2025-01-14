@@ -3,7 +3,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { createContext, useContext, ReactNode, useMemo, useState, useEffect, Suspense, useCallback } from 'react';
 
 interface AuthContextType {
-	isAuthenticated: boolean;
+	isAuthenticated: boolean | undefined;
 	login: () => void;
 	logout: () => void;
 	loginRequiredRedirect: () => void;
@@ -20,7 +20,7 @@ const REFRESH_INTERVAL = 50000; // 9 mins
 const AuthContext = createContext<AuthContextType | null>(null);
 
 function AuthProviderWrapper({ children }: { children: ReactNode }) {
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(undefined);
 	const router = useRouter();
 	const path = usePathname();
 	const searchParams = useSearchParams();
@@ -123,6 +123,11 @@ function AuthProviderWrapper({ children }: { children: ReactNode }) {
 		() => ({ isAuthenticated, login, logout, loginRequiredRedirect, path }),
 		[isAuthenticated, path, login, logout, loginRequiredRedirect]
 	);
+
+	if (isAuthenticated === undefined) {
+		return <div>Loading...</div>;
+	}
+
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

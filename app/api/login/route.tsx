@@ -15,7 +15,6 @@ export async function POST(request: Request) {
 	try {
 		const requestData = await request.json();
 		const body = JSON.stringify(requestData);
-		console.log(body);
 		const options = {
 			method: 'POST',
 			headers: {
