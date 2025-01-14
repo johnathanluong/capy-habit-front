@@ -15,7 +15,7 @@ const LOGOUT_REDIRECT = '/';
 const LOGIN_REQUIRED = '/login';
 const AUTH_LOCAL_STORAGE_KEY = 'is-authenticated';
 const REFRESH_URL = '/api/refresh/';
-const REFRESH_INTERVAL = 50000; // 9 mins
+const REFRESH_INTERVAL = 540000; // 9 mins
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
