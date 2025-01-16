@@ -1,4 +1,5 @@
 'use client';
+import { getAuthToken, getRefreshToken, isTokenExpired, isTokenNearingExpiry } from '@/lib/auth';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { createContext, useContext, ReactNode, useMemo, useState, useEffect, Suspense, useCallback } from 'react';
 
@@ -94,7 +95,8 @@ function AuthProviderWrapper({ children }: { children: ReactNode }) {
 							retryCount++;
 							await new Promise((resolve) => setTimeout(resolve, 1000 * retryCount));
 						} else if (e === 401) {
-							console.error('Authentication failed', e);
+							// Usually, refresh token expired
+							console.error('Authentication failed (refresh token expired)', e);
 							loginRequiredRedirect();
 							return;
 						} else {
@@ -108,8 +110,32 @@ function AuthProviderWrapper({ children }: { children: ReactNode }) {
 			}
 		};
 
+		const checkTokens = async () => {
+			const authToken = await getAuthToken();
+			const refreshToken = await getRefreshToken();
+
+			if (!authToken || !refreshToken) {
+				loginRequiredRedirect();
+				return;
+			}
+
+			const isAuthExpired = await isTokenExpired(authToken);
+			const isAuthNearingExpiry = await isTokenNearingExpiry(authToken);
+			const isRefreshExpired = await isTokenExpired(refreshToken);
+
+			if (isRefreshExpired) {
+				loginRequiredRedirect();
+				return;
+			}
+
+			if ((isAuthExpired || isAuthNearingExpiry) && !isRefreshing) {
+				await RefreshToken();
+			}
+		};
+
 		if (isAuthenticated) {
-			refreshInterval = setInterval(RefreshToken, REFRESH_INTERVAL);
+			checkTokens();
+			refreshInterval = setInterval(checkTokens, REFRESH_INTERVAL);
 		}
 
 		return () => {

@@ -18,6 +18,27 @@ export async function getRefreshToken() {
 	return refreshToken?.value;
 }
 
+export const isTokenExpired = async (token: string) => {
+	try {
+		const payload = JSON.parse(atob(token.split('.')[1]));
+		const expiry = payload.exp * 1000; // Convert to milliseconds
+		return Date.now() >= expiry;
+	} catch {
+		return true;
+	}
+};
+
+export const isTokenNearingExpiry = async (token: string) => {
+	try {
+		const payload = JSON.parse(atob(token.split('.')[1]));
+		const expiry = payload.exp * 1000;
+		// Check if token expires in next 60 seconds
+		return Date.now() >= expiry - 60000;
+	} catch {
+		return true;
+	}
+};
+
 // Called on login
 export async function setAuthToken(authToken: string) {
 	const authCookies = await cookies();

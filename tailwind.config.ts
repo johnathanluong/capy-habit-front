@@ -41,7 +41,8 @@ export default {
 				accent: {
 					DEFAULT: 'hsl(var(--accent))',
 					foreground: 'hsl(var(--accent-foreground))',
-					brown: '#A2744C'
+					brown: '#A2744C',
+					darkbrown: '#8f6540'
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
