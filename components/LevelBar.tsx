@@ -1,32 +1,24 @@
+import { User } from '@/app/interfaces/model';
 import React from 'react';
+import ProgressBar from './ProgressBar';
 
 interface LevelBarProps {
-	xp: number;
-	xpTotal: number;
-	level: number;
-	coins: number;
+	user: User;
 }
 
-export default function LevelBar({ xp, xpTotal, level, coins }: LevelBarProps) {
-	const progress = (xp / xpTotal) * 100;
+export default function LevelBar({ user }: LevelBarProps) {
+	const { experience_points, xp_for_level, level, points } = user;
 
 	return (
 		<div className='fixed bottom-8 left-20 right-20 flex flex-col'>
 			<div className='flex justify-between items-center mb-1'>
 				<h1 className='font-semibold text-lg'>Level {level}</h1>
-				<h1 className='font-semibold text-lg'>Coins: {coins}</h1>
+				<h1 className='font-semibold text-lg'>Coins: {points}</h1>
 				<span className='text-sm'>
-					{xp} / {xpTotal} XP
+					{experience_points} / {xp_for_level} XP
 				</span>
 			</div>
-			<div className='border-gray-300 border-2 rounded-full w-full h-6 bg-gray-100 overflow-hidden'>
-				<div
-					className='h-full bg-green-600 transition-all duration-300 ease-out rounded-lg'
-					style={{ width: `${progress}%` }}
-				>
-					<div className='h-full w-full bg-green-400 animate-pulse rounded-lg'></div>
-				</div>
-			</div>
+			<ProgressBar progress={experience_points} required={xp_for_level} type='level' />
 		</div>
 	);
 }

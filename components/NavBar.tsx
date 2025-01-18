@@ -4,18 +4,17 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from './AuthProvider';
 import { LoginDialog } from './LoginModal';
 import { Button } from './ui/button';
+import { logoutAPI } from '@/app/api/logout/api';
 
 export default function NavBar() {
 	const auth = useAuth();
 	const [isPathValid, setIsPathValid] = useState(true);
-	const [isDashboardPathValid, setIsDashboardPathValid] = useState(true);
 
 	const isAuthenticated = auth?.isAuthenticated;
 	const path = auth?.path;
 
 	useEffect(() => {
 		const invalidPaths = ['/login', '/dashboard', '/create-habit'];
-		const invalidDashboardPaths = ['/login'];
 		if (!path) {
 			return;
 		}
@@ -25,13 +24,12 @@ export default function NavBar() {
 		} else {
 			setIsPathValid(true);
 		}
-
-		if (invalidDashboardPaths.includes(path)) {
-			setIsDashboardPathValid(false);
-		} else {
-			setIsDashboardPathValid(true);
-		}
 	}, [path]);
+
+	const handleLogout = async () => {
+		await logoutAPI();
+		auth?.logout();
+	};
 
 	return (
 		<nav className='fixed top-0 left-0 right-0 flex items-center justify-between px-6 py-4 z-50 bg-slate-400'>
@@ -49,12 +47,20 @@ export default function NavBar() {
 				</div>
 			</div>
 			{!isAuthenticated && isPathValid && <LoginDialog />}
-			{isAuthenticated && isDashboardPathValid && (
+			{isAuthenticated && isPathValid && (
 				<Button
 					asChild
 					className='bg-primary-green px-4 py-1 text-gray-800 rounded-md hover:bg-[#9FB08E] transition-colors'
 				>
 					<Link href={'/dashboard'}>Dashboard</Link>
+				</Button>
+			)}
+			{isAuthenticated && !isPathValid && (
+				<Button
+					onClick={handleLogout}
+					className='bg-primary-green px-4 py-1 text-gray-800 rounded-md hover:bg-[#9FB08E] transition-colors'
+				>
+					Logout
 				</Button>
 			)}
 		</nav>

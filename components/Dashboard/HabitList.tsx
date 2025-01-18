@@ -2,29 +2,78 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Check, X, Settings } from 'lucide-react';
+import { Check, Settings } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Habit } from '@/app/interfaces/model';
 import { EditHabitDialog } from './EditHabitDialog';
+import ProgressBar from '../ProgressBar';
+import { mutate } from 'swr';
+import { apiFetch } from '@/lib/apiFetch';
+import { getAuthToken } from '@/lib/auth';
 
 interface HabitListProps {
 	habits: Habit[];
 	onUpdateHabit: (updatedHabit: Habit) => void;
 	onDeleteHabit: (habitId: number) => void;
 }
+const BACKEND_HABIT_URL = 'http://127.0.0.1:8000/api/habits';
 
 export function HabitList({ habits, onUpdateHabit, onDeleteHabit }: HabitListProps) {
-	const [shownHabits, setShownHabits] = useState<Habit[]>(habits);
+	const [shownHabits, setShownHabits] = useState<Habit[]>(
+		habits.filter((habit) => habit.progress.completed < habit.progress.required)
+	);
 	const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
 
-	const completeHabit = (id: number) => {
-		// Logic to complete habit
-		console.log(`Completed habit ${id}`);
-	};
+	const completeHabit = async (id: number) => {
+		const authToken = await getAuthToken();
+		if (!authToken) {
+			console.error('Auth token invalid');
+		}
+		if (!id) {
+			console.error('Habit ID not passed');
+		}
 
-	const deleteHabit = (id: number) => {
-		setShownHabits(habits.filter((shownHabit) => shownHabit.id !== id));
+		try {
+			const options = {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Accept: 'application/json',
+					Authorization: `Bearer ${authToken}`
+				}
+			};
+
+			await apiFetch(`${BACKEND_HABIT_URL}/${id}/complete`, options);
+		} catch (e) {
+			console.error('Habit completion failed:', e);
+		}
+
+		// Removes the habit if on the next completion it would satisfy the requirement
+		setShownHabits(
+			(prevHabits) =>
+				prevHabits
+					.map((habit) => {
+						if (habit.id === id) {
+							const newCompleted = (habit.progress.completed || 0) + 1;
+							if (newCompleted >= habit.progress.required) {
+								return null;
+							}
+							return {
+								...habit,
+								progress: {
+									...habit.progress,
+									completed: newCompleted
+								}
+							};
+						}
+						return habit;
+					})
+					.filter(Boolean) as Habit[]
+		);
+
+		mutate('http://127.0.0.1:8000/api/habits/');
+		mutate('http://127.0.0.1:8000/api/me');
 	};
 
 	const openEditDialog = (habit: Habit) => {
@@ -68,6 +117,15 @@ export function HabitList({ habits, onUpdateHabit, onDeleteHabit }: HabitListPro
 														{habit.streak}
 													</p>
 												</div>
+												{habit.frequency > 1 && (
+													<div>
+														<ProgressBar
+															progress={habit.progress.completed}
+															required={habit.progress.required}
+															type='habit'
+														/>
+													</div>
+												)}
 												<div className='flex space-x-2'>
 													<Button
 														size='sm'
@@ -82,14 +140,6 @@ export function HabitList({ habits, onUpdateHabit, onDeleteHabit }: HabitListPro
 														className='bg-secondary-light hover:bg-secondary-accent text-primary-white'
 													>
 														<Check className='w-4 h-4' />
-													</Button>
-													<Button
-														size='sm'
-														variant='destructive'
-														onClick={() => deleteHabit(habit.id)}
-														className='bg-destructive hover:bg-destructive/90 text-destructive-foreground'
-													>
-														<X className='w-4 h-4' />
 													</Button>
 												</div>
 											</div>

@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 			body: body
 		};
 
-		const data = await apiFetch(BACKEND_REGISTER_URL, options);
+		await apiFetch(BACKEND_REGISTER_URL, options);
 
 		return NextResponse.json({}, { status: 200 });
 	} catch (e) {

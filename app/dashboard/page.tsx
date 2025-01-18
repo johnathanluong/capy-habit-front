@@ -1,9 +1,8 @@
 'use client';
 import { useEffect } from 'react';
 import useSWR, { mutate } from 'swr';
-import { fetcher, apiFetch } from '@/lib/apiFetch';
+import { fetcher } from '@/lib/apiFetch';
 import { useAuth } from '@/components/AuthProvider';
-import { getAuthToken } from '@/lib/auth';
 
 import NavBar from '@/components/NavBar';
 import LevelBar from '@/components/LevelBar';
@@ -14,7 +13,7 @@ import { AccessorizeButton } from '@/components/Dashboard/AccessorizeButton';
 import { NavArrowsDashboard } from '@/components/Dashboard/NavArrowsDashboard';
 import { Habit } from '../interfaces/model';
 import { useToast } from '@/hooks/use-toast';
-import { convertHabiToFormData } from '@/lib/utils';
+import { deleteHabitAPI, updateHabitAPI } from '../api/habits/[habit.id]/api';
 
 const dummyXP = {
 	xp: 20,
@@ -23,30 +22,25 @@ const dummyXP = {
 	coins: 40
 };
 
-const BACKEND_HABIT_URL = 'http://127.0.0.1:8000/api/habits';
-
-interface Response {
-	id: number;
-	name: string;
-	description: string;
-	category?: string;
-	frequency: number;
-	frequency_type: string;
-	grace_period: number;
-	streak: number;
-	created: string; // ISO datetime string
-	modified: string; // ISO datetime string
-}
-
 export default function Dashboard() {
 	const auth = useAuth();
 	const { toast } = useToast();
 
 	const {
 		data: habits,
-		error,
-		isLoading
+		error: habitError,
+		isLoading: habitLoading
 	} = useSWR('http://127.0.0.1:8000/api/habits/', fetcher, {
+		revalidateOnFocus: false, // Reduce unnecessary revalidations
+		revalidateOnReconnect: false,
+		dedupingInterval: 5000 // Dedupe requests within 5 seconds
+	});
+
+	const {
+		data: user,
+		error: userError,
+		isLoading: userLoading
+	} = useSWR('http://127.0.0.1:8000/api/me', fetcher, {
 		revalidateOnFocus: false, // Reduce unnecessary revalidations
 		revalidateOnReconnect: false,
 		dedupingInterval: 5000 // Dedupe requests within 5 seconds
@@ -58,74 +52,34 @@ export default function Dashboard() {
 		}
 	}, [auth]);
 
-	if (isLoading) return <div>Loading...</div>;
-	if (error) return <div>Error loading habits</div>;
-
 	async function updateHabit(updatedHabit: Habit) {
-		const authToken = await getAuthToken();
-		if (!authToken) {
-			console.error('No auth token found');
-		}
-
-		if (!updatedHabit.id) {
-			console.error('Habit ID not passed');
-		}
-
 		try {
-			const requestData = convertHabiToFormData(updatedHabit);
-
-			const options = {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-					Accept: 'application/json',
-					Authorization: `Bearer ${authToken}`
-				},
-				body: JSON.stringify(requestData)
-			};
-
-			await apiFetch<Response>(`${BACKEND_HABIT_URL}/${updatedHabit.id}`, options);
-
+			await updateHabitAPI(updatedHabit);
 			toast({
 				title: 'Success',
 				description: 'Habit modified successfully'
 			});
 			mutate('http://127.0.0.1:8000/api/habits/');
-		} catch (e) {
-			console.error('Habit modification failed:', e);
+		} catch (error) {
+			console.error('Error updating habit frontend');
 		}
 	}
 
 	const deleteHabit = async (habitId: number) => {
-		const authToken = await getAuthToken();
-		if (!authToken) {
-			console.error('No auth token found');
-		}
-		if (!habitId) {
-			console.error('Habit ID not passed');
-		}
-
 		try {
-			const options = {
-				method: 'DELETE',
-				headers: {
-					'Content-Type': 'application/json',
-					Accept: 'application/json',
-					Authorization: `Bearer ${authToken}`
-				}
-			};
-
-			await apiFetch<Response>(`${BACKEND_HABIT_URL}/${habitId}`, options);
-
+			await deleteHabitAPI(habitId);
 			toast({
 				title: 'Success',
 				description: 'Habit deleted successfully'
 			});
 			mutate('http://127.0.0.1:8000/api/habits/');
 		} catch (e) {
-			console.error('Habit deleted failed:', e);
+			console.error('Habit deleted failed frontend:', e);
 		}
 	};
+
+	if (userLoading || habitLoading) return <div>Loading...</div>;
+	if (userError || habitError) return <div>Error loading.</div>;
 
 	return (
 		<>
@@ -150,7 +104,7 @@ export default function Dashboard() {
 							</div>
 						</div>
 						<NavArrowsDashboard />
-						<LevelBar {...dummyXP} />
+						<LevelBar user={user} />
 					</div>
 				</main>
 			</div>
