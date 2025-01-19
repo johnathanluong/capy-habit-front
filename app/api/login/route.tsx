@@ -1,9 +1,10 @@
 'use server';
+import { DJANGO_API_ENDPOINT } from '@/config/defaults';
 import { apiFetch } from '@/lib/apiFetch';
 import { setAuthToken, setRefreshToken } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 
-const BACKEND_LOGIN_URL = 'http://127.0.0.1:8000/api/users/login';
+const BACKEND_LOGIN_URL = `${DJANGO_API_ENDPOINT}/users/login`;
 
 interface POSTResponse {
 	username: string;

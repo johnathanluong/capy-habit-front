@@ -9,7 +9,6 @@ interface AuthContextType {
 	login: () => void;
 	logout: () => void;
 	loginRequiredRedirect: () => void;
-	checkAndRefreshToken: () => void;
 }
 
 const LOGIN_REDIRECT = '/dashboard';
@@ -54,53 +53,6 @@ function AuthProviderWrapper({ children }: { children: ReactNode }) {
 		const redirectPath = `${LOGIN_REQUIRED}?next=${encodeURIComponent(path)}`;
 		router.replace(redirectPath);
 	}, [router, path]);
-
-	const RefreshToken = async () => {
-		try {
-			const options = {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			};
-			const response = await fetch(REFRESH_URL, options);
-
-			if (!response.ok) {
-				throw response.status;
-			}
-
-			return;
-		} catch (e) {
-			if (e === 401) {
-				// Usually, refresh token expired
-				console.error('Authentication failed (refresh token expired)', e);
-				loginRequiredRedirect();
-				return;
-			} else {
-				console.error('Unhandled error during refresh', e);
-				return;
-			}
-		}
-	};
-
-	const checkAndRefreshToken = async () => {
-		const authToken = await getAuthToken();
-		if (!authToken) return false;
-
-		const isExpired = await isTokenExpired(authToken);
-		const isNearingExpiry = await isTokenNearingExpiry(authToken);
-
-		if (isExpired || isNearingExpiry) {
-			try {
-				await RefreshToken();
-				return true;
-			} catch (e) {
-				console.error('Token refresh failed:', e);
-				return false;
-			}
-		}
-		return true;
-	};
 
 	// Mounts the auth status
 	useEffect(() => {
@@ -194,8 +146,8 @@ function AuthProviderWrapper({ children }: { children: ReactNode }) {
 	}, [isAuthenticated, loginRequiredRedirect, path]);
 
 	const value = useMemo(
-		() => ({ isAuthenticated, path, login, logout, loginRequiredRedirect, checkAndRefreshToken }),
-		[isAuthenticated, path, login, logout, loginRequiredRedirect, checkAndRefreshToken]
+		() => ({ isAuthenticated, path, login, logout, loginRequiredRedirect }),
+		[isAuthenticated, path, login, logout, loginRequiredRedirect]
 	);
 
 	if (isAuthenticated === undefined) {

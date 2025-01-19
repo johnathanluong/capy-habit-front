@@ -1,8 +1,9 @@
 'use server';
+import { DJANGO_API_ENDPOINT } from '@/config/defaults';
 import { apiFetch } from '@/lib/apiFetch';
 import { NextResponse } from 'next/server';
 
-const BACKEND_REGISTER_URL = 'http://127.0.0.1:8000/api/users/register';
+const BACKEND_REGISTER_URL = `${DJANGO_API_ENDPOINT}/users/register`;
 
 export async function POST(request: Request) {
 	try {

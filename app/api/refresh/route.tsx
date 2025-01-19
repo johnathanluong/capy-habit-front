@@ -1,8 +1,9 @@
 'use server';
+import { DJANGO_API_ENDPOINT } from '@/config/defaults';
 import { getAuthToken, getRefreshToken, setAuthToken, setRefreshToken } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 
-const BACKEND_LOGIN_URL = 'http://127.0.0.1:8000/api/token/refresh';
+const BACKEND_LOGIN_URL = `${DJANGO_API_ENDPOINT}/token/refresh`;
 
 export async function POST() {
 	const refreshToken = await getRefreshToken();

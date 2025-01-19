@@ -1,8 +1,9 @@
 'use server';
+import { DJANGO_API_ENDPOINT } from '@/config/defaults';
 import { apiFetch } from '@/lib/apiFetch';
 import { NextResponse } from 'next/server';
 
-const BACKEND_VERIFY_URL = 'http://127.0.0.1:8000/api/users/verify';
+const BACKEND_VERIFY_URL = `${DJANGO_API_ENDPOINT}/users/verify`;
 
 export async function POST(request: Request) {
 	try {
@@ -16,7 +17,7 @@ export async function POST(request: Request) {
 			body: body
 		};
 
-		const data = await apiFetch(BACKEND_VERIFY_URL, options);
+		await apiFetch(BACKEND_VERIFY_URL, options);
 
 		return NextResponse.json({}, { status: 200 });
 	} catch (e) {

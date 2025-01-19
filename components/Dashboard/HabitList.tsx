@@ -11,13 +11,17 @@ import ProgressBar from './ProgressBar';
 import { mutate } from 'swr';
 import { apiFetch } from '@/lib/apiFetch';
 import { getAuthToken } from '@/lib/auth';
+import { DJANGO_API_ENDPOINT } from '@/config/defaults';
+
+const HABIT_API_URL = `/api/habits`;
+const ME_API_URL = `/api/me`;
 
 interface HabitListProps {
 	habits: Habit[];
 	onUpdateHabit: (updatedHabit: Habit) => void;
 	onDeleteHabit: (habitId: number) => void;
 }
-const BACKEND_HABIT_URL = 'http://127.0.0.1:8000/api/habits';
+const BACKEND_HABIT_URL = `${DJANGO_API_ENDPOINT}/habits`;
 
 export function HabitList({ habits, onUpdateHabit, onDeleteHabit }: HabitListProps) {
 	const [shownHabits, setShownHabits] = useState<Habit[]>(
@@ -72,8 +76,8 @@ export function HabitList({ habits, onUpdateHabit, onDeleteHabit }: HabitListPro
 					.filter(Boolean) as Habit[]
 		);
 
-		mutate('http://127.0.0.1:8000/api/habits/');
-		mutate('http://127.0.0.1:8000/api/me');
+		mutate(HABIT_API_URL);
+		mutate(ME_API_URL);
 	};
 
 	const openEditDialog = (habit: Habit) => {

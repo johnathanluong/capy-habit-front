@@ -68,7 +68,7 @@ export default function HabitCreationForm() {
 				return;
 			}
 
-			await mutate('http://127.0.0.1:8000/api/habits/');
+			await mutate(CREATE_HABIT_URL);
 
 			toast({
 				title: 'Success',

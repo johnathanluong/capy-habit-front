@@ -15,6 +15,9 @@ import { Habit } from '../interfaces/model';
 import { useToast } from '@/hooks/use-toast';
 import { deleteHabitAPI, updateHabitAPI } from '../api/habits/[habit.id]/api';
 
+const HABIT_API_URL = `/api/habits`;
+const ME_API_URL = `/api/me`;
+
 const dummyXP = {
 	xp: 20,
 	xpTotal: 80,
@@ -30,7 +33,7 @@ export default function Dashboard() {
 		data: habits,
 		error: habitError,
 		isLoading: habitLoading
-	} = useSWR('http://127.0.0.1:8000/api/habits/', fetcher, {
+	} = useSWR(HABIT_API_URL, fetcher, {
 		revalidateOnFocus: false, // Reduce unnecessary revalidations
 		revalidateOnReconnect: false,
 		dedupingInterval: 5000 // Dedupe requests within 5 seconds
@@ -40,7 +43,7 @@ export default function Dashboard() {
 		data: user,
 		error: userError,
 		isLoading: userLoading
-	} = useSWR('http://127.0.0.1:8000/api/me', fetcher, {
+	} = useSWR(ME_API_URL, fetcher, {
 		revalidateOnFocus: false, // Reduce unnecessary revalidations
 		revalidateOnReconnect: false,
 		dedupingInterval: 5000 // Dedupe requests within 5 seconds
@@ -59,7 +62,7 @@ export default function Dashboard() {
 				title: 'Success',
 				description: 'Habit modified successfully'
 			});
-			mutate('http://127.0.0.1:8000/api/habits/');
+			mutate(HABIT_API_URL);
 		} catch (error) {
 			console.error('Error updating habit frontend');
 		}
@@ -72,7 +75,7 @@ export default function Dashboard() {
 				title: 'Success',
 				description: 'Habit deleted successfully'
 			});
-			mutate('http://127.0.0.1:8000/api/habits/');
+			mutate(ME_API_URL);
 		} catch (e) {
 			console.error('Habit deleted failed frontend:', e);
 		}
@@ -80,15 +83,10 @@ export default function Dashboard() {
 
 	if (userLoading || habitLoading) return <div>Loading...</div>;
 	if (userError || habitError) {
-		const tryRefresh = async () => {
-			const refreshed = await auth?.checkAndRefreshToken();
-			if (!refreshed) {
-				auth?.loginRequiredRedirect();
-			}
-		};
-		tryRefresh();
+		auth?.loginRequiredRedirect();
 		return <div>Reauthenticating...</div>;
 	}
+
 	return (
 		<>
 			<NavBar />
@@ -104,14 +102,21 @@ export default function Dashboard() {
 						</div>
 						<div className='grid grid-rows-2 md:grid-rows-none md:grid-cols-2 gap-6 h-[70vh] md:min-h-[30vh] md:max-h-[60vh] '>
 							<div className='h-full max-h-[35vh] md:max-h-full'>
-								<HabitList habits={habits} onUpdateHabit={updateHabit} onDeleteHabit={deleteHabit} />
+								{habits && (
+									<HabitList
+										habits={habits.data}
+										onUpdateHabit={updateHabit}
+										onDeleteHabit={deleteHabit}
+									/>
+								)}
 							</div>
 							<div className='h-full max-h-[35vh] md:max-h-full'>
-								<CapybaraStackCard habits={habits} />
+								{habits && <CapybaraStackCard habits={habits?.data} />}
 							</div>
 						</div>
 						<NavArrowsDashboard />
-						<LevelBar user={user} />
+
+						{user && <LevelBar user={user?.data} />}
 					</div>
 				</main>
 			</div>

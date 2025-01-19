@@ -1,9 +1,10 @@
 import { Habit } from '@/app/interfaces/model';
+import { DJANGO_API_ENDPOINT } from '@/config/defaults';
 import { apiFetch } from '@/lib/apiFetch';
 import { getAuthToken } from '@/lib/auth';
 import { convertHabiToFormData } from '@/lib/utils';
 
-const BACKEND_HABIT_URL = 'http://127.0.0.1:8000/api/habits';
+const BACKEND_HABIT_URL = `${DJANGO_API_ENDPOINT}/habits`;
 
 export async function updateHabitAPI(updatedHabit: Habit) {
 	const authToken = await getAuthToken();
