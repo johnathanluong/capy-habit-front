@@ -9,9 +9,7 @@ import { Habit } from '@/app/interfaces/model';
 import { EditHabitDialog } from './EditHabitDialog';
 import ProgressBar from './ProgressBar';
 import { mutate } from 'swr';
-import { apiFetch } from '@/lib/apiFetch';
-import { getAuthToken } from '@/lib/auth';
-import { DJANGO_API_ENDPOINT } from '@/config/defaults';
+import { completeHabitAPI } from '@/app/api/habits/[habit.id]/api';
 
 const HABIT_API_URL = `/api/habits`;
 const ME_API_URL = `/api/me`;
@@ -21,7 +19,6 @@ interface HabitListProps {
 	onUpdateHabit: (updatedHabit: Habit) => void;
 	onDeleteHabit: (habitId: number) => void;
 }
-const BACKEND_HABIT_URL = `${DJANGO_API_ENDPOINT}/habits`;
 
 export function HabitList({ habits, onUpdateHabit, onDeleteHabit }: HabitListProps) {
 	const [shownHabits, setShownHabits] = useState<Habit[]>(
@@ -30,28 +27,7 @@ export function HabitList({ habits, onUpdateHabit, onDeleteHabit }: HabitListPro
 	const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
 
 	const completeHabit = async (id: number) => {
-		const authToken = await getAuthToken();
-		if (!authToken) {
-			console.error('Auth token invalid');
-		}
-		if (!id) {
-			console.error('Habit ID not passed');
-		}
-
-		try {
-			const options = {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					Accept: 'application/json',
-					Authorization: `Bearer ${authToken}`
-				}
-			};
-
-			await apiFetch(`${BACKEND_HABIT_URL}/${id}/complete`, options);
-		} catch (e) {
-			console.error('Habit completion failed:', e);
-		}
+		await completeHabitAPI(id);
 
 		// Removes the habit if on the next completion it would satisfy the requirement
 		setShownHabits(

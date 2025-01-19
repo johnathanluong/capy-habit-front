@@ -8,12 +8,12 @@ import NavBar from '@/components/NavBar';
 import LevelBar from '@/components/Dashboard/LevelBar';
 import { HabitList } from '@/components/Dashboard/HabitList';
 import { CapybaraStackCard } from '@/components/Dashboard/CapybaraStackCard';
-import { FriendsButton } from '@/components/Dashboard/FriendButton';
 import { AccessorizeButton } from '@/components/Dashboard/AccessorizeButton';
 import { NavArrowsDashboard } from '@/components/Dashboard/NavArrowsDashboard';
 import { Habit } from '../interfaces/model';
 import { useToast } from '@/hooks/use-toast';
 import { deleteHabitAPI, updateHabitAPI } from '../api/habits/[habit.id]/api';
+import Loading from '@/components/Loading';
 
 const HABIT_API_URL = `/api/habits`;
 const ME_API_URL = `/api/me`;
@@ -81,7 +81,7 @@ export default function Dashboard() {
 		}
 	};
 
-	if (userLoading || habitLoading) return <div>Loading...</div>;
+	if (userLoading || habitLoading) return <Loading />;
 	if (userError || habitError) {
 		auth?.loginRequiredRedirect();
 		return <div>Reauthenticating...</div>;
@@ -96,7 +96,6 @@ export default function Dashboard() {
 						<div className='flex justify-between items-center'>
 							<h2 className='text-3xl font-bold text-text-primary'>Dashboard</h2>
 							<div className='space-x-4'>
-								<FriendsButton />
 								<AccessorizeButton />
 							</div>
 						</div>

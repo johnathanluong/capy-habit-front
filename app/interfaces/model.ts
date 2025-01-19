@@ -33,3 +33,16 @@ export interface SWRError extends Error {
 	status: number;
 	info: string;
 }
+
+export interface Accessory {
+	name: string;
+	description: string;
+	image_filename: string;
+	rarity: string;
+}
+
+export interface UserAccessory {
+	accessory: Accessory;
+	quantity: number;
+	number_used: number;
+}

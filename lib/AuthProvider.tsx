@@ -1,4 +1,5 @@
 'use client';
+import Loading from '@/components/Loading';
 import { getAuthToken, getRefreshToken, isTokenExpired, isTokenNearingExpiry } from '@/lib/auth';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { createContext, useContext, ReactNode, useMemo, useState, useEffect, Suspense, useCallback } from 'react';
@@ -16,7 +17,7 @@ const LOGOUT_REDIRECT = '/';
 const LOGIN_REQUIRED = '/login';
 const AUTH_LOCAL_STORAGE_KEY = 'is-authenticated';
 const REFRESH_URL = '/api/refresh/';
-const REFRESH_INTERVAL = 540000; // 9 mins
+const REFRESH_INTERVAL = 270000; // 9 mins
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -159,7 +160,7 @@ function AuthProviderWrapper({ children }: { children: ReactNode }) {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
 	return (
-		<Suspense fallback={<div>Loading...</div>}>
+		<Suspense fallback={<Loading />}>
 			<AuthProviderWrapper>{children}</AuthProviderWrapper>
 		</Suspense>
 	);

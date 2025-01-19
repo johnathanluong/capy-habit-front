@@ -1,3 +1,5 @@
+'use server';
+
 import { Habit } from '@/app/interfaces/model';
 import { DJANGO_API_ENDPOINT } from '@/config/defaults';
 import { apiFetch } from '@/lib/apiFetch';
@@ -59,3 +61,28 @@ export const deleteHabitAPI = async (habitId: number) => {
 		console.error('Habit deleted failed:', e);
 	}
 };
+
+export async function completeHabitAPI(habitID: number) {
+	const authToken = await getAuthToken();
+	if (!authToken) {
+		console.error('Auth token invalid');
+	}
+	if (!habitID) {
+		console.error('Habit ID not passed');
+	}
+
+	try {
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Accept: 'application/json',
+				Authorization: `Bearer ${authToken}`
+			}
+		};
+
+		await apiFetch(`${BACKEND_HABIT_URL}/${habitID}/complete`, options);
+	} catch (e) {
+		console.error('Habit completion failed:', e);
+	}
+}

@@ -14,7 +14,7 @@ export default function NavBar() {
 	const path = auth?.path;
 
 	useEffect(() => {
-		const invalidPaths = ['/login', '/dashboard', '/create-habit'];
+		const invalidPaths = ['/login', '/dashboard', '/create-habit', '/gacha'];
 		if (!path) {
 			return;
 		}
