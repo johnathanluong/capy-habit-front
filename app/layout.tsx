@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Raleway } from 'next/font/google';
-import { AuthProvider } from '../components/AuthProvider';
+import { AuthProvider } from '../lib/AuthProvider';
 import './globals.css';
 
 const raleway = Raleway({

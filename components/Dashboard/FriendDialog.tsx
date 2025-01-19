@@ -1,16 +1,16 @@
-import { Button } from '@/components/ui/button';
-import { Users } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+'use client';
 import { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
-export function FriendsButton() {
+export function FriendButton() {
 	const [open, setOpen] = useState(false);
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button className='px-4 py-1 bg-primary-green text-gray-800 rounded-md hover:bg-[#9FB08E] transition-colors'>
-					<Users className='mr-2 h-4 w-4' /> Friends
+					Login
 				</Button>
 			</DialogTrigger>
 			<DialogContent className='sm:max-w-[425px] bg-primary-green'>

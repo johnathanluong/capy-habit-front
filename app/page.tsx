@@ -1,5 +1,4 @@
 'use client';
-import { useAuth } from '@/components/AuthProvider';
 import { GameController, MedalMilitary } from '@phosphor-icons/react';
 
 import NavBar from '@/components/NavBar';
@@ -14,8 +13,6 @@ import Capybara3SVG from '../components/LandingPageCapybaras/Capybara3SVG';
 import Image from 'next/image';
 
 export default function Page() {
-	const auth = useAuth();
-
 	return (
 		<div className={`min-h-screen bg-[#E6EEF6] overflow-hidden}`}>
 			{/* Navigation */}

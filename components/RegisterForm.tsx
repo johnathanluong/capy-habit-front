@@ -1,10 +1,11 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import Notepad from './Notepad';
 
 const REGISTER_URL = '/api/register/';
 
 export default function RegisterForm() {
+	const [message, setMessage] = useState('');
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget);
@@ -20,12 +21,12 @@ export default function RegisterForm() {
 
 		const response = await fetch(REGISTER_URL, requestOptions);
 		if (!response.ok) {
+			setMessage('Unable to register, try again.');
 			console.error('Error fetching registering', response.status);
 		}
 
-		const data = await response.json();
-
-		console.log('Data', data);
+		setMessage('An email was sent to you, please verify your email...');
+		await response.json();
 	}
 
 	return (
@@ -84,6 +85,7 @@ export default function RegisterForm() {
 				>
 					Register
 				</button>
+				<h1 className='relative mt-[-2rem] ml-auto mr-28'>{message}</h1>
 			</form>
 		</div>
 	);

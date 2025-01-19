@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { useAuth } from './AuthProvider';
+import { useAuth } from '../lib/AuthProvider';
 import { LoginDialog } from './LoginModal';
 import { Button } from './ui/button';
 import { logoutAPI } from '@/app/api/logout/api';

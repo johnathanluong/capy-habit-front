@@ -1,14 +1,16 @@
 'use client';
-import { useAuth } from '@/components/AuthProvider';
+import { useAuth } from '@/lib/AuthProvider';
 import NavBar from '@/components/NavBar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
+import { useState } from 'react';
 
 const LOGIN_URL = '/api/login/';
 
 export default function Page() {
+	const [message, setMessage] = useState('');
 	const auth = useAuth();
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -26,10 +28,12 @@ export default function Page() {
 
 		const res = await fetch(LOGIN_URL, requestOptions);
 		if (!res.ok) {
+			setMessage('Incorrect login credentials, try again.');
 			console.error('Error logging in:', res);
 			return;
 		}
 
+		setMessage('Logging in...');
 		auth?.login();
 	}
 
@@ -61,6 +65,8 @@ export default function Page() {
 								className='border-primary-darkgreen focus:border-primary-darkgreen bg-primary-darkgreen'
 							/>
 						</div>
+
+						<h1 className='mt-1 font-thin'>{message}</h1>
 
 						<Button type='submit' className='w-full'>
 							Login

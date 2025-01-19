@@ -2,10 +2,10 @@
 import { useEffect } from 'react';
 import useSWR, { mutate } from 'swr';
 import { fetcher } from '@/lib/apiFetch';
-import { useAuth } from '@/components/AuthProvider';
+import { useAuth } from '@/lib/AuthProvider';
 
 import NavBar from '@/components/NavBar';
-import LevelBar from '@/components/LevelBar';
+import LevelBar from '@/components/Dashboard/LevelBar';
 import { HabitList } from '@/components/Dashboard/HabitList';
 import { CapybaraStackCard } from '@/components/Dashboard/CapybaraStackCard';
 import { FriendsButton } from '@/components/Dashboard/FriendButton';
@@ -80,13 +80,19 @@ export default function Dashboard() {
 
 	if (userLoading || habitLoading) return <div>Loading...</div>;
 	if (userError || habitError) {
-		return auth?.loginRequiredRedirect();
+		const tryRefresh = async () => {
+			const refreshed = await auth?.checkAndRefreshToken();
+			if (!refreshed) {
+				auth?.loginRequiredRedirect();
+			}
+		};
+		tryRefresh();
+		return <div>Reauthenticating...</div>;
 	}
 	return (
 		<>
 			<NavBar />
 			<div className='flex flex-col min-h-screen bg-primary-light'>
-				<NavBar />
 				<main className='flex-1 p-6 pt-20 overflow-hidden'>
 					<div className='max-w-7xl mx-auto h-full flex flex-col space-y-6'>
 						<div className='flex justify-between items-center'>

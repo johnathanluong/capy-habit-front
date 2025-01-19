@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { useAuth } from '@/components/AuthProvider';
+import { useAuth } from '@/lib/AuthProvider';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 const LOGIN_URL = '/api/login/';
 
 export function LoginDialog() {
+	const [message, setMessage] = useState('');
 	const [open, setOpen] = useState(false);
 	const auth = useAuth();
 
@@ -27,10 +28,12 @@ export function LoginDialog() {
 
 		const res = await fetch(LOGIN_URL, requestOptions);
 		if (!res.ok) {
+			setMessage('Incorrect login credentials, try again.');
 			console.error('Error logging in:', res);
 			return;
 		}
 
+		setMessage('Logging in...');
 		auth?.login();
 		setOpen(false);
 	}
@@ -70,6 +73,9 @@ export function LoginDialog() {
 							className='border-primary-darkgreen focus:border-primary-darkgreen bg-primary-darkgreen'
 						/>
 					</div>
+
+					<h1 className='mt-1 font-thin'>{message}</h1>
+
 					<Button type='submit' className='w-full'>
 						Login
 					</Button>

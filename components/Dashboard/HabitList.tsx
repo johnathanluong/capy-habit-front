@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Habit } from '@/app/interfaces/model';
 import { EditHabitDialog } from './EditHabitDialog';
-import ProgressBar from '../ProgressBar';
+import ProgressBar from './ProgressBar';
 import { mutate } from 'swr';
 import { apiFetch } from '@/lib/apiFetch';
 import { getAuthToken } from '@/lib/auth';

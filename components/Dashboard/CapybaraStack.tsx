@@ -6,7 +6,8 @@ interface CapybaraStackProps {
 	habit: Habit;
 }
 
-const CAPYBARA_IMG_URL = '/images/capybaras/capybara_without_shadow.png';
+const CAPYBARA_IMG_URL_PRE = '/images/capybaras/capy_';
+const CAPYBARA_IMG_URL_POST = '.png';
 
 export default function CapybaraStack({ habit }: CapybaraStackProps) {
 	const { small, medium, large } = habit.capybara_stack;
@@ -17,14 +18,20 @@ export default function CapybaraStack({ habit }: CapybaraStackProps) {
 			<div className='flex flex-col items-center'>
 				{/* Small capybaras */}
 				{Array.from({ length: small }).map((_, index) => (
-					<Image key={`small-${index}`} src={CAPYBARA_IMG_URL} alt='small capybara' width={80} height={80} />
+					<Image
+						key={`small-${index}`}
+						src={`${CAPYBARA_IMG_URL_PRE}base${CAPYBARA_IMG_URL_POST}`}
+						alt='small capybara'
+						width={80}
+						height={80}
+					/>
 				))}
 
 				{/* Medium capybaras */}
 				{Array.from({ length: medium }).map((_, index) => (
 					<Image
 						key={`medium-${index}`}
-						src={CAPYBARA_IMG_URL}
+						src={`${CAPYBARA_IMG_URL_PRE}base${CAPYBARA_IMG_URL_POST}`}
 						alt='medium capybara'
 						width={120}
 						height={120}
@@ -35,7 +42,7 @@ export default function CapybaraStack({ habit }: CapybaraStackProps) {
 				{Array.from({ length: large }).map((_, index) => (
 					<Image
 						key={`large-${index}`}
-						src={CAPYBARA_IMG_URL}
+						src={`${CAPYBARA_IMG_URL_PRE}base${CAPYBARA_IMG_URL_POST}`}
 						alt='large capybara'
 						width={160}
 						height={160}
