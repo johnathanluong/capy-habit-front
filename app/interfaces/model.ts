@@ -13,6 +13,11 @@ export interface Habit {
 		completed: number;
 		required: number;
 	};
+	capybara_stack: {
+		small: number;
+		medium: number;
+		large: number;
+	};
 }
 
 export interface User {

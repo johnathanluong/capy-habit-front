@@ -21,7 +21,7 @@ const BACKEND_HABIT_URL = 'http://127.0.0.1:8000/api/habits';
 
 export function HabitList({ habits, onUpdateHabit, onDeleteHabit }: HabitListProps) {
 	const [shownHabits, setShownHabits] = useState<Habit[]>(
-		habits.filter((habit) => habit.progress.completed < habit.progress.required)
+		habits.filter((habit) => habit.progress?.completed < habit.progress?.required)
 	);
 	const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
 

@@ -7,7 +7,7 @@ import { useAuth } from '@/components/AuthProvider';
 import NavBar from '@/components/NavBar';
 import LevelBar from '@/components/LevelBar';
 import { HabitList } from '@/components/Dashboard/HabitList';
-import { CapybaraStack } from '@/components/Dashboard/CapybaraStack';
+import { CapybaraStackCard } from '@/components/Dashboard/CapybaraStackCard';
 import { FriendsButton } from '@/components/Dashboard/FriendButton';
 import { AccessorizeButton } from '@/components/Dashboard/AccessorizeButton';
 import { NavArrowsDashboard } from '@/components/Dashboard/NavArrowsDashboard';
@@ -79,8 +79,9 @@ export default function Dashboard() {
 	};
 
 	if (userLoading || habitLoading) return <div>Loading...</div>;
-	if (userError || habitError) return <div>Error loading.</div>;
-
+	if (userError || habitError) {
+		return auth?.loginRequiredRedirect();
+	}
 	return (
 		<>
 			<NavBar />
@@ -100,7 +101,7 @@ export default function Dashboard() {
 								<HabitList habits={habits} onUpdateHabit={updateHabit} onDeleteHabit={deleteHabit} />
 							</div>
 							<div className='h-full max-h-[35vh] md:max-h-full'>
-								<CapybaraStack />
+								<CapybaraStackCard habits={habits} />
 							</div>
 						</div>
 						<NavArrowsDashboard />

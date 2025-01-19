@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export function NavArrowsDashboard() {
 	return (
-		<div className='fixed top-[85%] md:top-1/2 left-0 right-0 flex justify-between px-4 -translate-y-1/2'>
+		<div className='fixed top-[85%] left-0 right-0 flex justify-between px-4 -translate-y-1/2'>
 			<div className='flex flex-col items-center'>
 				<h1 className='mb-2 text-lg'>To Habit Creation</h1>
 				<Button
