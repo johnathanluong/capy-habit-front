@@ -18,6 +18,7 @@ export interface Habit {
 		medium: number;
 		large: number;
 	};
+	accessory: Accessory;
 }
 
 export interface User {
@@ -35,6 +36,7 @@ export interface SWRError extends Error {
 }
 
 export interface Accessory {
+	id: number;
 	name: string;
 	description: string;
 	image_filename: string;

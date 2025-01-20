@@ -52,8 +52,7 @@ export function HabitList({ habits, onUpdateHabit, onDeleteHabit }: HabitListPro
 					.filter(Boolean) as Habit[]
 		);
 
-		mutate(HABIT_API_URL);
-		mutate(ME_API_URL);
+		await Promise.all([mutate(HABIT_API_URL), mutate(ME_API_URL)]);
 	};
 
 	const openEditDialog = (habit: Habit) => {

@@ -51,7 +51,9 @@ export default function Dashboard() {
 
 	useEffect(() => {
 		if (!auth?.isAuthenticated) {
-			auth?.loginRequiredRedirect();
+			setTimeout(() => {
+				auth?.loginRequiredRedirect();
+			}, 0);
 		}
 	}, [auth]);
 
@@ -95,9 +97,7 @@ export default function Dashboard() {
 					<div className='max-w-7xl mx-auto h-full flex flex-col space-y-6'>
 						<div className='flex justify-between items-center'>
 							<h2 className='text-3xl font-bold text-text-primary'>Dashboard</h2>
-							<div className='space-x-4'>
-								<AccessorizeButton />
-							</div>
+							<div className='space-x-4'>{habits && <AccessorizeButton habits={habits.data} />}</div>
 						</div>
 						<div className='grid grid-rows-2 md:grid-rows-none md:grid-cols-2 gap-6 h-[70vh] md:min-h-[30vh] md:max-h-[60vh] '>
 							<div className='h-full max-h-[35vh] md:max-h-full'>

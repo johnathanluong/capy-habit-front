@@ -5,9 +5,9 @@ import { apiFetch } from '@/lib/apiFetch';
 import { getAuthToken } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 
-const BACKEND_GACHA_URL = `${DJANGO_API_ENDPOINT}/gacha`;
+const BACKEND_INVENTORY_URL = `${DJANGO_API_ENDPOINT}/gacha/inventory`;
 
-// Get available gacha items
+// Get user's inventory
 export async function GET() {
 	const authToken = await getAuthToken();
 	if (!authToken) {
@@ -22,7 +22,7 @@ export async function GET() {
 				Authorization: `Bearer ${authToken.trim()}`
 			}
 		};
-		const data = await apiFetch(BACKEND_GACHA_URL, options);
+		const data = await apiFetch(BACKEND_INVENTORY_URL, options);
 
 		return NextResponse.json({ data }, { status: 200 });
 	} catch (e) {
