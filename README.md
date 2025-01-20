@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Capy Habits
+[![Project Version][version-image]][version-url]
+[![Frontend][Frontend-image]][Frontend-url]
+ 
+This is the front-end of Capy Habits, a capybara habit tracker built with Next.js, TypeScript, and TailwindCSS. Users can log habits, track progress, and earn rewards for completing goals. Features include a dynamic capybara stack visualization, streak tracking, and a gacha system for customizing capybaras. 
 
-## Getting Started
+---
+## Author
 
-First, run the development server:
+***Johnathan Tuong Luong***
+* *Released on* [Railway](https://capy-habit.up.railway.app/)
+* *My professional profile on* [LinkedIn](https://www.linkedin.com/in/johnathan-luong/)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Showcase
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This project was designed to demonstrate:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* Next.js
+  * React
+* TypeScript
+* TailwindCSS
+* Railway
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+If you encounter any issues or have questions, feel free to open an issue in this repository and let me know!
 
-To learn more about Next.js, take a look at the following resources:
+<!-- Markdown link & img dfn's -->
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+[header-url]: github-template.png
+[header-link]: https://github.com/alexandrerosseto
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+[repository-url]: https://github.com/alexandrerosseto/wbshopping
 
-## Deploy on Vercel
+[cloud-provider-url]: https://wbshopping.herokuapp.com
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+[linkedin-url]: https://www.linkedin.com/in/alexandrerosseto
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[wiki]: https://github.com/yourname/yourproject/wiki
+
+[version-image]: https://img.shields.io/badge/Version-1.0.0-brightgreen?style=for-the-badge&logo=appveyor
+[version-url]: https://img.shields.io/badge/version-1.0.0-green
+[Frontend-image]: https://img.shields.io/badge/Frontend-Next.js-blue?style=for-the-badge
+[Frontend-url]: https://img.shields.io/badge/Frontend-Next.js-blue?style=for-the-badge
